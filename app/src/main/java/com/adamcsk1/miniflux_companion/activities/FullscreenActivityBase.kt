@@ -1,6 +1,5 @@
 package com.adamcsk1.miniflux_companion.activities
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.adamcsk1.miniflux_companion.AlertHandler

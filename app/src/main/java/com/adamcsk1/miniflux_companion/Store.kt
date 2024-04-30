@@ -29,7 +29,7 @@ class Store(private val sharedPref: SharedPreferences) {
             }
         }
     var bypassHTTPS: Boolean
-        get() = sharedPref.getBoolean(StoreKeysModel.BYPASS_HTTPS.name, true) ?: true
+        get() = sharedPref.getBoolean(StoreKeysModel.BYPASS_HTTPS.name, true)
         set(value) {
             with (sharedPref.edit()) {
                 putBoolean(StoreKeysModel.BYPASS_HTTPS.name, value)
