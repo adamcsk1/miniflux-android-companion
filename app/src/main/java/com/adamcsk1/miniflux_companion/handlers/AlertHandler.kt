@@ -1,7 +1,8 @@
-package com.adamcsk1.miniflux_companion
+package com.adamcsk1.miniflux_companion.handlers
 
 import android.app.AlertDialog
 import android.content.Context
+import com.adamcsk1.miniflux_companion.R
 
 class AlertHandler(private val context: Context) {
     fun showConfirm(message: String, positiveFn:() -> Unit, negativeFn:() -> Unit = {  }) {

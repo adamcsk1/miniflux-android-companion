@@ -3,7 +3,7 @@ package com.adamcsk1.miniflux_companion.activities.configuration
 import android.os.Bundle
 import android.widget.Toast
 import com.adamcsk1.miniflux_companion.R
-import com.adamcsk1.miniflux_companion.ReloadApplication
+import com.adamcsk1.miniflux_companion.utils.ReloadApplication
 import com.adamcsk1.miniflux_companion.api.ServerState
 import kotlin.concurrent.thread
 
