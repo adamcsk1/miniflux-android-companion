@@ -7,11 +7,13 @@ import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.HttpsURLConnection
 
 object ServerState {
-    fun reachable(url: String, accessToken: String): Boolean {
+    fun reachable(url: String, accessToken: String, bypassHTTPS: Boolean): Boolean {
         return try {
             (URL("$url/v1/me").openConnection() as HttpsURLConnection).apply {
-                sslSocketFactory = UnsafeSocket.create()
-                hostnameVerifier = HostnameVerifier { _, _ -> true }
+                if(bypassHTTPS) {
+                    sslSocketFactory = UnsafeSocket.create()
+                    hostnameVerifier = HostnameVerifier { _, _ -> true }
+                }
                 readTimeout = 5_000
                 setRequestProperty("X-Auth-Token", accessToken)
             }.responseCode == HttpURLConnection.HTTP_OK

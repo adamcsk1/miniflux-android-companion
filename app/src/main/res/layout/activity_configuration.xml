@@ -71,6 +71,16 @@
             android:textColorHint="#9E9E9E"
             android:visibility="visible" />
 
+        <CheckBox
+            android:id="@+id/checkBoxBypassHTTPS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/buttonText"
+            android:minHeight="48dp"
+            android:text="@string/bypass_https_errors"
+            android:textColor="@color/buttonText"
+            android:textColorHint="@color/colorHint" />
+
         <Button
             android:id="@+id/buttonSave"
             android:layout_width="wrap_content"

@@ -21,8 +21,9 @@ open class Setup : FullscreenActivityBase() {
         setupSwipe()
     }
 
-    protected open fun handleWebViewError() {}
+    protected open fun handleWebViewPageReceivedSslError(handler: SslErrorHandler) {}
     protected open fun handleWebViewPageFinished(url: String) {}
+    protected open fun handleWebViewError() {}
 
     private fun setupSwipe() {
         webViewSwipeRefresh.isEnabled = true
@@ -38,7 +39,7 @@ open class Setup : FullscreenActivityBase() {
         webView.settings.domStorageEnabled = true
         webView.webViewClient = object : WebViewClient(){
             @SuppressLint("WebViewClientOnReceivedSslError")
-            override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) = handler.proceed()
+            override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) = handleWebViewPageReceivedSslError(handler)
             override fun onPageFinished(view: WebView, url: String) = handleWebViewPageFinished(url)
             override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) = handleWebViewError()
         }
