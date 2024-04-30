@@ -5,7 +5,7 @@
     android:id="@+id/fullscreenActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/minifluxDarkBackground"
     tools:context=".activities.main.MainActivity">
 
     <Button
@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:gravity="center|center_horizontal"
         android:text="@string/settings"
         android:textColor="@color/buttonText"
@@ -37,14 +37,14 @@
         android:id="@+id/webViewSwipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#323232"
+        android:background="@color/background"
         android:visibility="gone">
 
         <WebView
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#242424"
+            android:background="@color/minifluxDarkBackground"
             android:overScrollMode="never">
 
         </WebView>
@@ -54,6 +54,7 @@
         android:id="@+id/logoLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/minifluxDarkBackground"
         android:gravity="center"
         android:hapticFeedbackEnabled="false"
         android:orientation="vertical">
@@ -62,7 +63,6 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00FFFFFF"
             android:contentDescription="@string/logo"
             android:scaleX="1"
             android:scaleY="1"
