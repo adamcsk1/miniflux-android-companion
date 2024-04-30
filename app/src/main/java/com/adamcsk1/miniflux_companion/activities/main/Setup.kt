@@ -1,7 +1,6 @@
 package com.adamcsk1.miniflux_companion.activities.main
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.net.http.SslError
 import android.os.Bundle
 import android.webkit.*
@@ -9,7 +8,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.adamcsk1.miniflux_companion.activities.FullscreenActivityBase
 import com.adamcsk1.miniflux_companion.databinding.ActivityMainBinding
-
 
 open class Setup : FullscreenActivityBase() {
     protected lateinit var binding: ActivityMainBinding
