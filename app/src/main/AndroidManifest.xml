@@ -23,6 +23,7 @@
         <activity
             android:name=".activities.configuration.ConfigurationActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:parentActivityName=".activities.main.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_configuration"/>
     </application>

@@ -10,28 +10,28 @@
 
     <Button
         android:id="@+id/buttonSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/settings_button"
+        android:contentDescription="@string/settings"
         android:gravity="center|center_horizontal"
-        android:text="@string/settings"
         android:textColor="@color/buttonText"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/buttonBack"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/back_button"
-        android:contentDescription="@string/back"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_button"
         android:gravity="center|center_horizontal"
-        android:scaleX="0.7"
-        android:scaleY="0.7"
+        android:text="@string/back"
         android:textColor="@color/buttonText"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/webViewSwipeRefresh"
