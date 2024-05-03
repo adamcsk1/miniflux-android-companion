@@ -2,6 +2,8 @@
 <resources>
     <color name="colorPrimary">#393530</color>
     <color name="colorAccent">#b2aca2</color>
+    <color name="colorPrimaryVariant">#393530</color>
+    <color name="colorAlertDialogText">#393530</color>
     <color name="colorHint">#9E9E9E</color>
     <color name="buttonText">#BDBDBD</color>
     <color name="buttonBackground">#393530</color>

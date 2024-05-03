@@ -2,21 +2,16 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="android:textColorPrimary">@color/buttonText</item>
         <item name="android:statusBarColor">@color/minifluxDarkBackground</item>
         <item name="android:navigationBarColor">@color/minifluxDarkBackground</item>
         <item name="android:windowLightStatusBar">@bool/windowLightStatusBar</item>
         <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
-        <item name="android:dropDownItemStyle">@style/DropDownItemTheme</item>
     </style>
 
-    <style name="AlertDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
-        <item name="android:colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@color/colorAccent</item>
-    </style>
-
-    <style name="DropDownItemTheme">
-        <item name="android:colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@color/colorAccent</item>
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:colorAccent">@color/colorAlertDialogText</item>
+        <item name="android:textColorPrimary">@color/colorAlertDialogText</item>
     </style>
 </resources>
