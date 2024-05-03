@@ -36,7 +36,6 @@ class Store(private val sharedPref: SharedPreferences) {
                 commit()
             }
         }
-
     var theme: String
         get() = sharedPref.getString(StoreKeysEnum.THEME.name, "") ?: ""
         set(value) {

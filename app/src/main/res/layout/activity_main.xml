@@ -64,8 +64,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/logo"
-            android:scaleX="1"
-            android:scaleY="1"
             app:srcCompat="@mipmap/ic_launcher_foreground" />
 
         <TextView
