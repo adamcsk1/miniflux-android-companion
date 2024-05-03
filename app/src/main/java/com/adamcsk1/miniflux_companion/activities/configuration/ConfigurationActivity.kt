@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.utils.ReloadApplication
-import com.adamcsk1.miniflux_companion.api.ServerState
+import com.adamcsk1.miniflux_companion.utils.ServerState
 import kotlin.concurrent.thread
 
 
@@ -21,15 +21,15 @@ class ConfigurationActivity : Setup() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val localUrl = sharedPrefHelper.localUrl
-        val externalUrl = sharedPrefHelper.externalUrl
-        val accessToken = sharedPrefHelper.accessToken
+        val localUrl = store.localUrl
+        val externalUrl = store.externalUrl
+        val accessToken = store.accessToken
 
         if(localUrl.isNotEmpty() && externalUrl.isNotEmpty() && accessToken.isNotEmpty()) {
             binding.textLocalUrl.setText(localUrl)
             binding.textExternalUrl.setText(externalUrl)
             binding.textAccessToken.setText(accessToken)
-            binding.checkBypassHTTPS.isChecked = sharedPrefHelper.bypassHTTPS
+            binding.checkBypassHTTPS.isChecked = store.bypassHTTPS
         }
 
         binding.buttonSave.setOnClickListener { saveButtonClick() }
@@ -69,15 +69,15 @@ class ConfigurationActivity : Setup() {
     }
 
     private fun resetApplication() {
-        sharedPrefHelper.clear()
+        store.clear()
         runOnUiThread { ReloadApplication.reload(this) }
     }
 
     private fun applyConfiguration() {
-        sharedPrefHelper.localUrl = localUrlInputValue
-        sharedPrefHelper.externalUrl = externalUrlInputValue
-        sharedPrefHelper.accessToken = accessTokenInputValue
-        sharedPrefHelper.bypassHTTPS = bypassHTTPSCheckBoxValue
+        store.localUrl = localUrlInputValue
+        store.externalUrl = externalUrlInputValue
+        store.accessToken = accessTokenInputValue
+        store.bypassHTTPS = bypassHTTPSCheckBoxValue
         finish()
     }
 }

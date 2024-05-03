@@ -1,8 +1,9 @@
 package com.adamcsk1.miniflux_companion.models
 
-enum class StoreKeysModel {
+enum class StoreKeysEnum {
     LOCAL_URL,
     EXTERNAL_URL,
     ACCESS_TOKEN,
-    BYPASS_HTTPS
+    BYPASS_HTTPS,
+    THEME
 }

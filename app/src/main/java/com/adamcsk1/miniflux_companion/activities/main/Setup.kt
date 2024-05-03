@@ -7,13 +7,20 @@ import android.webkit.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.adamcsk1.miniflux_companion.activities.FullscreenActivityBase
+import com.adamcsk1.miniflux_companion.handlers.ApiHandler
 import com.adamcsk1.miniflux_companion.databinding.ActivityMainBinding
+import com.adamcsk1.miniflux_companion.handlers.ThemeHandler
 
 open class Setup : FullscreenActivityBase() {
     protected lateinit var binding: ActivityMainBinding
+    protected lateinit var apis: ApiHandler
+    protected lateinit var theme: ThemeHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        apis = ApiHandler(store)
+        theme = ThemeHandler(store)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
@@ -32,7 +39,7 @@ open class Setup : FullscreenActivityBase() {
     protected open fun handleWebViewPageFinished(url: String) {}
     protected open fun handleWebViewError() {}
     protected open fun handleActivityResult(result: ActivityResult) {}
-    protected open fun handleOverrideUrlLoading(url: WebResourceRequest): Boolean {return true}
+    protected open fun handleOverrideUrlLoading(request: WebResourceRequest): Boolean {return true}
 
     private fun setupSwipe() {
         binding.webViewSwipeRefresh.isEnabled = true

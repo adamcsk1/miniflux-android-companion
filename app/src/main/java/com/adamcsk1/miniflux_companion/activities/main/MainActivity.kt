@@ -6,9 +6,10 @@ import android.view.View
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
 import androidx.activity.result.ActivityResult
+import androidx.appcompat.app.AppCompatDelegate
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.activities.configuration.ConfigurationActivity
-import com.adamcsk1.miniflux_companion.api.ServerState
+import com.adamcsk1.miniflux_companion.utils.ServerState
 import kotlin.concurrent.thread
 
 
@@ -21,7 +22,10 @@ class MainActivity : Setup() {
         binding.buttonSettings.setOnClickListener { showConfigurationActivity() }
         binding.buttonBack.setOnClickListener { backButtonClick() }
 
-        if(sharedPrefHelper.localUrl.isNotEmpty() && sharedPrefHelper.externalUrl.isNotEmpty() && sharedPrefHelper.accessToken.isNotEmpty())
+        if(store.theme.isNotEmpty())
+            theme.switch(store.theme)
+
+        if(store.localUrl.isNotEmpty() && store.externalUrl.isNotEmpty() && store.accessToken.isNotEmpty())
             loadMiniflux()
         else
             showConfigurationActivity()
@@ -32,12 +36,16 @@ class MainActivity : Setup() {
     private fun loadMiniflux() {
         firstLoadFinished = false
         thread {
-            if (ServerState.reachable(sharedPrefHelper.localUrl, sharedPrefHelper.accessToken, sharedPrefHelper.bypassHTTPS))
-                runOnUiThread { binding.webView.loadUrl(sharedPrefHelper.localUrl) }
+            if (ServerState.reachable(store.localUrl, store.accessToken, store.bypassHTTPS))
+                runOnUiThread {
+                    apis.setBaseUrl(store.localUrl)
+                    binding.webView.loadUrl(store.localUrl)
+                }
             else
                 runOnUiThread {
                     toast.show(resources.getString(R.string.toast_switch_to_external))
-                    binding.webView.loadUrl(sharedPrefHelper.externalUrl)
+                    apis.setBaseUrl(store.externalUrl)
+                    binding.webView.loadUrl(store.externalUrl)
                 }
         }
     }
@@ -51,7 +59,7 @@ class MainActivity : Setup() {
     override fun handleWebViewError() = checkAvailability()
 
     override fun handleWebViewPageReceivedSslError(handler: SslErrorHandler) {
-        if(sharedPrefHelper.bypassHTTPS)
+        if(store.bypassHTTPS)
             handler.proceed()
         else {
             handler.cancel()
@@ -63,28 +71,34 @@ class MainActivity : Setup() {
     override fun handleWebViewPageFinished(url: String) {
         binding.webViewSwipeRefresh.isRefreshing = false
 
-        if(!firstLoadFinished) {
-            firstLoadFinished = true
-            binding.logoLayout.visibility = View.GONE
-            binding.webViewSwipeRefresh.visibility = View.VISIBLE
+        if(url.contains(store.localUrl) || url.contains(store.externalUrl)) {
+            if (!firstLoadFinished) {
+                firstLoadFinished = true
+                binding.logoLayout.visibility = View.GONE
+                binding.webViewSwipeRefresh.visibility = View.VISIBLE
+                checkMinifluxTheme()
+            }
+
+            if (url.contains("/entry/"))
+                binding.buttonBack.visibility = View.VISIBLE
+            else if (binding.buttonBack.visibility == View.VISIBLE)
+                binding.buttonBack.visibility = View.GONE
+
+            if (url.endsWith("/settings")) {
+                binding.buttonSettings.visibility = View.VISIBLE
+                checkMinifluxTheme()
+            } else if (binding.buttonSettings.visibility == View.VISIBLE) {
+                binding.buttonSettings.visibility = View.GONE
+                checkMinifluxTheme()
+            }
+
+            checkAvailability()
         }
-
-        if(url.contains("/entry/"))
-            binding.buttonBack.visibility = View.VISIBLE
-       else
-            binding.buttonBack.visibility = View.GONE
-
-        if(url.endsWith("/settings"))
-            binding.buttonSettings.visibility = View.VISIBLE
-        else
-            binding.buttonSettings.visibility = View.GONE
-
-        checkAvailability()
     }
 
     override fun handleOverrideUrlLoading(request: WebResourceRequest): Boolean {
-        val url = request.url.toString();
-        if(!url.contains(sharedPrefHelper.localUrl) && !url.contains(sharedPrefHelper.externalUrl))
+        val url = request.url.toString()
+        if(!url.contains(store.localUrl) && !url.contains(store.externalUrl))
             startActivity(Intent(Intent.ACTION_VIEW, request.url))
         else
             binding.webView.loadUrl(url)
@@ -94,9 +108,9 @@ class MainActivity : Setup() {
     private fun checkAvailability() {
         thread {
             val localReachable =
-                ServerState.reachable(sharedPrefHelper.localUrl, sharedPrefHelper.accessToken, sharedPrefHelper.bypassHTTPS)
+                ServerState.reachable(store.localUrl, store.accessToken, store.bypassHTTPS)
             val externalReachable =
-                ServerState.reachable(sharedPrefHelper.externalUrl, sharedPrefHelper.accessToken, sharedPrefHelper.bypassHTTPS)
+                ServerState.reachable(store.externalUrl, store.accessToken, store.bypassHTTPS)
 
             runOnUiThread {
                 if(!localReachable && !externalReachable) {
@@ -104,12 +118,14 @@ class MainActivity : Setup() {
                     binding.webViewSwipeRefresh.visibility = View.GONE
                     binding.logoLayout.visibility = View.VISIBLE
                     showConfigurationActivity()
-                } else if(localReachable && !binding.webView.url!!.contains(sharedPrefHelper.localUrl)){
+                } else if(localReachable && !binding.webView.url!!.contains(store.localUrl)){
                     toast.show(resources.getString(R.string.toast_switch_to_local))
-                    binding.webView.loadUrl(sharedPrefHelper.localUrl)
-                } else if(!localReachable && !binding.webView.url!!.contains(sharedPrefHelper.externalUrl)) {
+                    apis.setBaseUrl(store.localUrl)
+                    binding.webView.loadUrl(store.localUrl)
+                } else if(!localReachable && !binding.webView.url!!.contains(store.externalUrl)) {
                     toast.show(resources.getString(R.string.toast_switch_to_external))
-                    binding.webView.loadUrl(sharedPrefHelper.externalUrl)
+                    apis.setBaseUrl(store.externalUrl)
+                    binding.webView.loadUrl(store.externalUrl)
                 }
             }
         }
@@ -120,5 +136,12 @@ class MainActivity : Setup() {
         binding.webViewSwipeRefresh.visibility = View.GONE
         binding.buttonSettings.visibility = View.GONE
         startActivityForResult.launch(Intent(this,ConfigurationActivity::class.java))
+    }
+
+    private fun checkMinifluxTheme() {
+        thread {
+            val meResponse = apis.me()
+            runOnUiThread { theme.switch(meResponse?.theme) }
+        }
     }
 }

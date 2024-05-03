@@ -1,38 +1,47 @@
 package com.adamcsk1.miniflux_companion.store
 
 import android.content.SharedPreferences
-import com.adamcsk1.miniflux_companion.models.StoreKeysModel
+import com.adamcsk1.miniflux_companion.models.StoreKeysEnum
 
 class Store(private val sharedPref: SharedPreferences) {
     var localUrl: String
-        get() = sharedPref.getString(StoreKeysModel.LOCAL_URL.name, "") ?: ""
+        get() = sharedPref.getString(StoreKeysEnum.LOCAL_URL.name, "") ?: ""
         set(value) {
             with (sharedPref.edit()) {
-                putString(StoreKeysModel.LOCAL_URL.name, value)
+                putString(StoreKeysEnum.LOCAL_URL.name, value)
                 commit()
             }
         }
     var externalUrl: String
-        get() = sharedPref.getString(StoreKeysModel.EXTERNAL_URL.name, "") ?: ""
+        get() = sharedPref.getString(StoreKeysEnum.EXTERNAL_URL.name, "") ?: ""
         set(value) {
             with (sharedPref.edit()) {
-                putString(StoreKeysModel.EXTERNAL_URL.name, value)
+                putString(StoreKeysEnum.EXTERNAL_URL.name, value)
                 commit()
             }
         }
     var accessToken: String
-        get() = sharedPref.getString(StoreKeysModel.ACCESS_TOKEN.name, "") ?: ""
+        get() = sharedPref.getString(StoreKeysEnum.ACCESS_TOKEN.name, "") ?: ""
         set(value) {
             with (sharedPref.edit()) {
-                putString(StoreKeysModel.ACCESS_TOKEN.name, value)
+                putString(StoreKeysEnum.ACCESS_TOKEN.name, value)
                 commit()
             }
         }
     var bypassHTTPS: Boolean
-        get() = sharedPref.getBoolean(StoreKeysModel.BYPASS_HTTPS.name, true)
+        get() = sharedPref.getBoolean(StoreKeysEnum.BYPASS_HTTPS.name, true)
         set(value) {
             with (sharedPref.edit()) {
-                putBoolean(StoreKeysModel.BYPASS_HTTPS.name, value)
+                putBoolean(StoreKeysEnum.BYPASS_HTTPS.name, value)
+                commit()
+            }
+        }
+
+    var theme: String
+        get() = sharedPref.getString(StoreKeysEnum.THEME.name, "") ?: ""
+        set(value) {
+            with (sharedPref.edit()) {
+                putString(StoreKeysEnum.THEME.name, value)
                 commit()
             }
         }
