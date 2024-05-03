@@ -96,7 +96,6 @@ class MainActivity : Setup() {
                 firstLoadFinished = true
                 binding.logoLayout.visibility = View.GONE
                 binding.webViewSwipeRefresh.visibility = View.VISIBLE
-                checkMinifluxTheme()
             }
 
             if (url.contains("/entry/"))
@@ -104,13 +103,10 @@ class MainActivity : Setup() {
             else if (binding.buttonBack.visibility == View.VISIBLE)
                 binding.buttonBack.visibility = View.GONE
 
-            if (url.endsWith("/settings")) {
+            if (url.endsWith("/settings"))
                 binding.buttonSettings.visibility = View.VISIBLE
-                checkMinifluxTheme()
-            } else if (binding.buttonSettings.visibility == View.VISIBLE) {
+            else if (binding.buttonSettings.visibility == View.VISIBLE)
                 binding.buttonSettings.visibility = View.GONE
-                checkMinifluxTheme()
-            }
 
             checkAvailability()
         }
@@ -149,7 +145,7 @@ class MainActivity : Setup() {
                     apis.setBaseUrl(store.externalUrl)
                     binding.webView.loadUrl(store.externalUrl)
                     SingletonStore.webViewState = null
-                }
+                } else checkMinifluxTheme()
             }
         }
     }
