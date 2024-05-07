@@ -17,6 +17,31 @@
         android:paddingRight="16dp"
         android:visibility="visible">
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchUrlMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/chip_mode" />
+
+        <EditText
+            android:id="@+id/textUrl"
+            style="@android:style/Widget.Material.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:backgroundTint="@color/colorPrimary"
+            android:clipToOutline="true"
+            android:ems="10"
+            android:hint="@string/url"
+            android:inputType="textUri|text"
+            android:minHeight="48dp"
+            android:outlineProvider="bounds"
+            android:singleLine="true"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorHint"
+            android:visibility="visible" />
+
         <EditText
             android:id="@+id/textLocalUrl"
             style="@android:style/Widget.Material.EditText"
@@ -33,7 +58,7 @@
             android:singleLine="true"
             android:textColor="@color/colorAccent"
             android:textColorHint="@color/colorHint"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/textExternalUrl"
@@ -51,7 +76,7 @@
             android:singleLine="true"
             android:textColor="@color/colorAccent"
             android:textColorHint="@color/colorHint"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/textAccessToken"

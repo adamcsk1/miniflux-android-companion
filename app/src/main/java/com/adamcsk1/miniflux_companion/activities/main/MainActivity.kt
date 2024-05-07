@@ -27,12 +27,12 @@ class MainActivity : Setup() {
             if(store.localUrl.isNotEmpty() && store.externalUrl.isNotEmpty() && store.accessToken.isNotEmpty())
                 checkAvailability()
             else
-                showConfigurationActivity()
+                onShowConfigurationActivity()
         else
             restoreInstanceStates()
 
-        binding.buttonSettings.setOnClickListener { showConfigurationActivity() }
-        binding.buttonBack.setOnClickListener { backButtonClick() }
+        binding.buttonSettings.setOnClickListener { onShowConfigurationActivity() }
+        binding.buttonBack.setOnClickListener { onBackButtonClick() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -50,7 +50,7 @@ class MainActivity : Setup() {
             apis.setBaseUrl(if (binding.webView.url!!.contains(store.localUrl)) store.localUrl else store.externalUrl)
         }
 
-    private fun backButtonClick() {
+    private fun onBackButtonClick() {
         binding.webViewSwipeRefresh.isRefreshing = true
         binding.buttonBack.visibility = View.GONE
         binding.webView.goBack()
@@ -64,7 +64,7 @@ class MainActivity : Setup() {
         else {
             handler.cancel()
             toast.show(resources.getString(R.string.toast_ssl_error))
-            showConfigurationActivity()
+            onShowConfigurationActivity()
         }
     }
 
@@ -100,31 +100,20 @@ class MainActivity : Setup() {
 
     private fun checkAvailability(fromActivity: Boolean = false) {
         thread {
+            val shouldUseOneUrl = store.localUrl === store.externalUrl
             val localReachable =
                 ServerState.reachable(store.localUrl, store.accessToken, store.bypassHTTPS)
             val externalReachable =
-                ServerState.reachable(store.externalUrl, store.accessToken, store.bypassHTTPS)
+                if(shouldUseOneUrl) false else ServerState.reachable(store.externalUrl, store.accessToken, store.bypassHTTPS)
 
             runOnUiThread {
-                if(!localReachable && !externalReachable) {
-                    toast.show(resources.getString(R.string.toast_offline))
-                    binding.webViewSwipeRefresh.visibility = View.GONE
-                    binding.logoLayout.visibility = View.VISIBLE
-                    SingletonStore.webViewState = null
-                    showConfigurationActivity()
-                } else if(localReachable && binding.webView.url?.contains(store.localUrl) != true){
-                    binding.webViewSwipeRefresh.isRefreshing = true
-                    toast.show(resources.getString(R.string.toast_local_access))
-                    apis.setBaseUrl(store.localUrl)
-                    binding.webView.loadUrl(store.localUrl)
-                    SingletonStore.webViewState = null
-                } else if(!localReachable && binding.webView.url?.contains(store.externalUrl)  != true) {
-                    binding.webViewSwipeRefresh.isRefreshing = true
-                    toast.show(resources.getString(R.string.toast_external_access))
-                    apis.setBaseUrl(store.externalUrl)
-                    binding.webView.loadUrl(store.externalUrl)
-                    SingletonStore.webViewState = null
-                } else {
+                if(!localReachable && !externalReachable)
+                    switchToOffline()
+                else if(!shouldUseOneUrl && localReachable && binding.webView.url?.contains(store.localUrl) != true)
+                    switchToLocalUrl()
+                else if(!shouldUseOneUrl && !localReachable && binding.webView.url?.contains(store.externalUrl)  != true)
+                    switchToExternalUrl()
+                else {
                     checkMinifluxTheme()
                     if(fromActivity)
                         showWebView()
@@ -133,7 +122,31 @@ class MainActivity : Setup() {
         }
     }
 
-    private fun showConfigurationActivity() {
+    private fun switchToOffline() {
+        toast.show(resources.getString(R.string.toast_offline))
+        binding.webViewSwipeRefresh.visibility = View.GONE
+        binding.logoLayout.visibility = View.VISIBLE
+        SingletonStore.webViewState = null
+        onShowConfigurationActivity()
+    }
+
+    private fun switchToLocalUrl() {
+        binding.webViewSwipeRefresh.isRefreshing = true
+        toast.show(resources.getString(R.string.toast_local_access))
+        apis.setBaseUrl(store.localUrl)
+        binding.webView.loadUrl(store.localUrl)
+        SingletonStore.webViewState = null
+    }
+
+    private fun switchToExternalUrl() {
+        binding.webViewSwipeRefresh.isRefreshing = true
+        toast.show(resources.getString(R.string.toast_external_access))
+        apis.setBaseUrl(store.externalUrl)
+        binding.webView.loadUrl(store.externalUrl)
+        SingletonStore.webViewState = null
+    }
+
+    private fun onShowConfigurationActivity() {
         binding.logoLayout.visibility = View.VISIBLE
         binding.webViewSwipeRefresh.visibility = View.GONE
         binding.buttonSettings.visibility = View.GONE

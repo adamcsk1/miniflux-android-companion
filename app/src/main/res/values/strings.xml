@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_activity_configuration">Configurations</string>
+    <string name="title_activity_configuration">Settings</string>
     <string name="toast_external_access">External access</string>
     <string name="toast_local_access">Local access</string>
     <string name="toast_missed_access_token">Please enter your Miniflux access token!</string>
-    <string name="toast_missed_local_url">Please enter the local and external Miniflux URLs!</string>
+    <string name="toast_missed_urls">Please enter the local and external Miniflux URLs!</string>
+    <string name="toast_missed_url">Please enter the Miniflux URL!</string>
     <string name="toast_bad_local_url_format">Local url is not in correct format! Required format: https://{host}/</string>
     <string name="toast_bad_external_url_format">External url is not in correct format! Required format: https://{host}/</string>
+    <string name="toast_bad_url_format">Miniflux url is not in correct format! Required format: https://{host}/</string>
     <string name="toast_connecting">Connecting…</string>
     <string name="toast_offline">Miniflux is offline!</string>
     <string name="toast_local_not_responding">The local Miniflux is not responding!</string>
     <string name="toast_external_not_responding">The external Miniflux is not responding!</string>
     <string name="toast_both_not_responding">Both Miniflux are not responding!</string>
+    <string name="toast_not_responding">Miniflux is not responding!</string>
     <string name="toast_ssl_error">The SSL cert is invalid!</string>
     <string name="alert_reset_app_settings">Are you sure you want to reset the companion app configuration?</string>
     <string name="alert_continue">Do you want to continue?</string>
+    <string name="chip_mode">Use different internal and external url</string>
+    <string name="spinner_default_mode_prompt">Normal</string>
     <string name="app_name">Miniflux companion</string>
+    <string name="url">Miniflux URL</string>
     <string name="local_url">Local Miniflux URL</string>
     <string name="external_url">External Miniflux URL</string>
     <string name="access_token">Access token</string>
