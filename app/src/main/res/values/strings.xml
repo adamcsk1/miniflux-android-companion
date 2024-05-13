@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_activity_configuration">Settings</string>
-    <string name="toast_external_access">External access</string>
-    <string name="toast_local_access">Local access</string>
     <string name="toast_missed_access_token">Please enter your Miniflux access token!</string>
     <string name="toast_missed_urls">Please enter the local and external Miniflux URLs!</string>
     <string name="toast_missed_url">Please enter the Miniflux URL!</string>
@@ -26,7 +24,6 @@
     <string name="external_url">External Miniflux URL</string>
     <string name="access_token">Access token</string>
     <string name="save_urls">Open</string>
-    <string name="back">back</string>
     <string name="logo">Logo</string>
     <string name="reset_settings">Reset settings</string>
     <string name="settings">Companion app settings</string>

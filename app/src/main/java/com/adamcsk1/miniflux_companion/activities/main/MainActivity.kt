@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResult
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.activities.configuration.ConfigurationActivity
@@ -14,6 +15,9 @@ import kotlin.concurrent.thread
 
 
 class MainActivity : Setup() {
+    private val shouldUseOneUrl: Boolean
+        get() = store.localUrl === store.externalUrl
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,7 +36,7 @@ class MainActivity : Setup() {
             restoreInstanceStates()
 
         binding.buttonSettings.setOnClickListener { onShowConfigurationActivity() }
-        binding.buttonBack.setOnClickListener { onBackButtonClick() }
+        this.onBackPressedDispatcher.addCallback(this) { handleSystemBack() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -49,12 +53,6 @@ class MainActivity : Setup() {
             binding.webView.restoreState(it)
             apis.setBaseUrl(if (binding.webView.url!!.contains(store.localUrl)) store.localUrl else store.externalUrl)
         }
-
-    private fun onBackButtonClick() {
-        binding.webViewSwipeRefresh.isRefreshing = true
-        binding.buttonBack.visibility = View.GONE
-        binding.webView.goBack()
-    }
 
     override fun handleWebViewError() = checkAvailability()
 
@@ -74,11 +72,6 @@ class MainActivity : Setup() {
         if(url.contains(store.localUrl) || url.contains(store.externalUrl)) {
             if (binding.webViewSwipeRefresh.visibility == View.GONE)
                 showWebView()
-
-            if (url.contains("/entry/"))
-                binding.buttonBack.visibility = View.VISIBLE
-            else if (binding.buttonBack.visibility == View.VISIBLE)
-                binding.buttonBack.visibility = View.GONE
 
             if (url.endsWith("/settings"))
                 binding.buttonSettings.visibility = View.VISIBLE
@@ -100,7 +93,6 @@ class MainActivity : Setup() {
 
     private fun checkAvailability(fromActivity: Boolean = false) {
         thread {
-            val shouldUseOneUrl = store.localUrl === store.externalUrl
             val localReachable =
                 ServerState.reachable(store.localUrl, store.accessToken, store.bypassHTTPS)
             val externalReachable =
@@ -132,7 +124,6 @@ class MainActivity : Setup() {
 
     private fun switchToLocalUrl() {
         binding.webViewSwipeRefresh.isRefreshing = true
-        toast.show(resources.getString(R.string.toast_local_access))
         apis.setBaseUrl(store.localUrl)
         binding.webView.loadUrl(store.localUrl)
         SingletonStore.webViewState = null
@@ -140,7 +131,6 @@ class MainActivity : Setup() {
 
     private fun switchToExternalUrl() {
         binding.webViewSwipeRefresh.isRefreshing = true
-        toast.show(resources.getString(R.string.toast_external_access))
         apis.setBaseUrl(store.externalUrl)
         binding.webView.loadUrl(store.externalUrl)
         SingletonStore.webViewState = null
@@ -163,5 +153,16 @@ class MainActivity : Setup() {
     private fun showWebView() {
         binding.logoLayout.visibility = View.GONE
         binding.webViewSwipeRefresh.visibility = View.VISIBLE
+    }
+
+    private fun handleSystemBack() {
+        if(
+            binding.webView.url?.endsWith("/unread") == true ||
+            binding.webView.url?.endsWith(store.localUrl) == true ||
+            (!shouldUseOneUrl && binding.webView.url?.endsWith( store.externalUrl) == true)
+        )
+            moveTaskToBack(true)
+        else
+            binding.webView.goBack()
     }
 }
