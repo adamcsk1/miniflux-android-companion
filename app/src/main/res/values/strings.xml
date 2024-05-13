@@ -17,7 +17,7 @@
     <string name="alert_reset_app_settings">Are you sure you want to reset the companion app configuration?</string>
     <string name="alert_continue">Do you want to continue?</string>
     <string name="chip_mode">Use different internal and external url</string>
-    <string name="spinner_default_mode_prompt">Normal</string>
+    <string name="mode_info">You should log in to both miniflux instances manually later!</string>
     <string name="app_name">Miniflux companion</string>
     <string name="url">Miniflux URL</string>
     <string name="local_url">Local Miniflux URL</string>

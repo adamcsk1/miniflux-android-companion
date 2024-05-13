@@ -141,10 +141,12 @@ class ConfigurationActivity : Setup() {
             binding.textUrl.visibility = View.GONE
             binding.textLocalUrl.visibility = View.VISIBLE
             binding.textExternalUrl.visibility = View.VISIBLE
+            binding.textViewModeInfo.visibility = View.VISIBLE
             binding.textExternalUrl.setText(urlInputValue)
             binding.textUrl.setText("")
         } else {
             binding.textUrl.visibility = View.VISIBLE
+            binding.textViewModeInfo.visibility = View.GONE
             binding.textUrl.setText(externalUrlInputValue)
             binding.textLocalUrl.visibility = View.GONE
             binding.textLocalUrl.setText("")
