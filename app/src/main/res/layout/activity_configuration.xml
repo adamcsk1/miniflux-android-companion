@@ -115,7 +115,7 @@
         <CheckBox
             android:id="@+id/checkBypassHTTPS"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="61dp"
             android:buttonTint="@color/colorAccent"
             android:minHeight="48dp"
             android:text="@string/bypass_https_errors"
