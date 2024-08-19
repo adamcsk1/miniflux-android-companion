@@ -30,9 +30,9 @@
         <TextView
             android:id="@+id/textViewModeInfo"
             android:layout_width="match_parent"
-            android:layout_height="22dp"
+            android:layout_height="34dp"
             android:ems="10"
-            android:inputType="text"
+            android:maxLines="2"
             android:minHeight="48dp"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
