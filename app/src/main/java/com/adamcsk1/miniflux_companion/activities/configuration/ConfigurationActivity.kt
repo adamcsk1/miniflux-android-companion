@@ -5,19 +5,18 @@ import android.widget.Toast
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.ReloadApplication
 import com.adamcsk1.miniflux_companion.api.ServerState
-import kotlinx.android.synthetic.main.activity_configuration.*
 import kotlin.concurrent.thread
 
 
 class ConfigurationActivity : Setup() {
     private val localUrlInputValue: String
-        get() = textLocalUrl.text.toString()
+        get() = binding.textLocalUrl.text.toString()
     private val externalUrlInputValue: String
-        get() = textExternalUrl.text.toString()
+        get() = binding.textExternalUrl.text.toString()
     private val accessTokenInputValue: String
-        get() = textAccessToken.text.toString()
+        get() = binding.textAccessToken.text.toString()
     private val bypassHTTPSCheckBoxValue: Boolean
-        get() = checkBypassHTTPS.isChecked
+        get() = binding.checkBypassHTTPS.isChecked
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,14 +26,14 @@ class ConfigurationActivity : Setup() {
         val accessToken = sharedPrefHelper.accessToken
 
         if(localUrl.isNotEmpty() && externalUrl.isNotEmpty() && accessToken.isNotEmpty()) {
-            textLocalUrl.setText(localUrl)
-            textExternalUrl.setText(externalUrl)
-            textAccessToken.setText(accessToken)
-            checkBypassHTTPS.isChecked = sharedPrefHelper.bypassHTTPS
+            binding.textLocalUrl.setText(localUrl)
+            binding.textExternalUrl.setText(externalUrl)
+            binding.textAccessToken.setText(accessToken)
+            binding.checkBypassHTTPS.isChecked = sharedPrefHelper.bypassHTTPS
         }
 
-        buttonSave.setOnClickListener { saveButtonClick() }
-        buttonReset.setOnClickListener { alert.showConfirm(resources.getString(R.string.alert_reset_app_settings), ::resetApplication) }
+        binding.buttonSave.setOnClickListener { saveButtonClick() }
+        binding.buttonReset.setOnClickListener { alert.showConfirm(resources.getString(R.string.alert_reset_app_settings), ::resetApplication) }
     }
 
     private fun saveButtonClick() {

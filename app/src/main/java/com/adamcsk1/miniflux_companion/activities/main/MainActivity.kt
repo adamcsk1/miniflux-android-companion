@@ -4,10 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.webkit.SslErrorHandler
+import androidx.activity.result.ActivityResult
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.activities.configuration.ConfigurationActivity
 import com.adamcsk1.miniflux_companion.api.ServerState
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.concurrent.thread
 
 
@@ -17,8 +17,8 @@ class MainActivity : Setup() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        buttonSettings.setOnClickListener { showConfigurationActivity() }
-        buttonBack.setOnClickListener { backButtonClick() }
+        binding.buttonSettings.setOnClickListener { showConfigurationActivity() }
+        binding.buttonBack.setOnClickListener { backButtonClick() }
 
         if(sharedPrefHelper.localUrl.isNotEmpty() && sharedPrefHelper.externalUrl.isNotEmpty() && sharedPrefHelper.accessToken.isNotEmpty())
             loadMiniflux()
@@ -26,28 +26,25 @@ class MainActivity : Setup() {
             showConfigurationActivity()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        loadMiniflux()
-    }
+    override fun handleActivityResult(result: ActivityResult) = loadMiniflux()
 
     private fun loadMiniflux() {
         firstLoadFinished = false
         thread {
             if (ServerState.reachable(sharedPrefHelper.localUrl, sharedPrefHelper.accessToken, sharedPrefHelper.bypassHTTPS))
-                runOnUiThread { webView.loadUrl(sharedPrefHelper.localUrl) }
+                runOnUiThread { binding.webView.loadUrl(sharedPrefHelper.localUrl) }
             else
                 runOnUiThread {
                     toast.show(resources.getString(R.string.toast_switch_to_external))
-                    webView.loadUrl(sharedPrefHelper.externalUrl)
+                    binding.webView.loadUrl(sharedPrefHelper.externalUrl)
                 }
         }
     }
 
     private fun backButtonClick() {
-        webViewSwipeRefresh.isRefreshing = true
-        buttonBack.visibility = View.GONE
-        webView.goBack()
+        binding.webViewSwipeRefresh.isRefreshing = true
+        binding.buttonBack.visibility = View.GONE
+        binding.webView.goBack()
     }
 
     override fun handleWebViewError() = checkAvailability()
@@ -63,23 +60,23 @@ class MainActivity : Setup() {
     }
 
     override fun handleWebViewPageFinished(url: String) {
-        webViewSwipeRefresh.isRefreshing = false
+        binding.webViewSwipeRefresh.isRefreshing = false
 
         if(!firstLoadFinished) {
             firstLoadFinished = true
-            logoLayout.visibility = View.GONE
-            webViewSwipeRefresh.visibility = View.VISIBLE
+            binding.logoLayout.visibility = View.GONE
+            binding.webViewSwipeRefresh.visibility = View.VISIBLE
         }
 
         if(url.contains("/entry/"))
-            buttonBack.visibility = View.VISIBLE
+            binding.buttonBack.visibility = View.VISIBLE
        else
-            buttonBack.visibility = View.GONE
+            binding.buttonBack.visibility = View.GONE
 
         if(url.endsWith("/settings"))
-            buttonSettings.visibility = View.VISIBLE
+            binding.buttonSettings.visibility = View.VISIBLE
         else
-            buttonSettings.visibility = View.GONE
+            binding.buttonSettings.visibility = View.GONE
 
         checkAvailability()
     }
@@ -94,25 +91,24 @@ class MainActivity : Setup() {
             runOnUiThread {
                 if(!localReachable && !externalReachable) {
                     toast.show(resources.getString(R.string.toast_offline))
-                    webViewSwipeRefresh.visibility = View.GONE
-                    logoLayout.visibility = View.VISIBLE
+                    binding.webViewSwipeRefresh.visibility = View.GONE
+                    binding.logoLayout.visibility = View.VISIBLE
                     showConfigurationActivity()
-                } else if(localReachable && !webView.url!!.contains(sharedPrefHelper.localUrl)){
+                } else if(localReachable && !binding.webView.url!!.contains(sharedPrefHelper.localUrl)){
                     toast.show(resources.getString(R.string.toast_switch_to_local))
-                    webView.loadUrl(sharedPrefHelper.localUrl)
-                } else if(!localReachable && !webView.url!!.contains(sharedPrefHelper.externalUrl)) {
+                    binding.webView.loadUrl(sharedPrefHelper.localUrl)
+                } else if(!localReachable && !binding.webView.url!!.contains(sharedPrefHelper.externalUrl)) {
                     toast.show(resources.getString(R.string.toast_switch_to_external))
-                    webView.loadUrl(sharedPrefHelper.externalUrl)
+                    binding.webView.loadUrl(sharedPrefHelper.externalUrl)
                 }
             }
         }
     }
 
     private fun showConfigurationActivity() {
-        logoLayout.visibility = View.VISIBLE
-        webViewSwipeRefresh.visibility = View.GONE
-        buttonSettings.visibility = View.GONE
-        val intent = Intent(this,ConfigurationActivity::class.java)
-        startActivityForResult(intent, 1)
+        binding.logoLayout.visibility = View.VISIBLE
+        binding.webViewSwipeRefresh.visibility = View.GONE
+        binding.buttonSettings.visibility = View.GONE
+        startActivityForResult.launch(Intent(this,ConfigurationActivity::class.java))
     }
 }
