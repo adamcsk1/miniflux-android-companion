@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_configuration">Configurations</string>
+    <string name="toast_switch_to_external">Switching to the external Miniflux!</string>
+    <string name="toast_switch_to_local">Switching to the local Miniflux!</string>
+    <string name="toast_missed_access_token">Please enter your Miniflux access token!</string>
+    <string name="toast_missed_local_url">Please enter the local and external Miniflux URLs!</string>
+    <string name="toast_bad_local_url_format">Local url is not in correct format! Required format: https://{host}/</string>
+    <string name="toast_bad_external_url_format">External url is not in correct format! Required format: https://{host}/</string>
+    <string name="toast_connecting">Connecting…</string>
+    <string name="toast_offline">Miniflux is offline!</string>
+    <string name="toast_local_not_responding">The local Miniflux is not responding!</string>
+    <string name="toast_external_not_responding">The external Miniflux is not responding!</string>
+    <string name="toast_both_not_responding">Both Miniflux are not responding!</string>
+    <string name="alert_reset_app_settings">Are you sure you want to reset the companion app configuration?</string>
+    <string name="alert_continue">Do you want to continue?</string>
+    <string name="app_name">Miniflux companion</string>
+    <string name="local_url">Local Miniflux URL</string>
+    <string name="external_url">External Miniflux URL</string>
+    <string name="access_token">Access token</string>
+    <string name="save_urls">Open</string>
+    <string name="back">back</string>
+    <string name="logo">Logo</string>
+    <string name="reset_settings">Reset settings</string>
+    <string name="settings">Companion app settings</string>
+    <string name="confirm">Confirm</string>
+</resources>
