@@ -1,6 +1,7 @@
 package com.adamcsk1.miniflux_companion.activities.configuration
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.store.SingletonStore
@@ -10,6 +11,8 @@ import kotlin.concurrent.thread
 
 
 class ConfigurationActivity : Setup() {
+    private val urlInputValue: String
+        get() = binding.textUrl.text.toString()
     private val localUrlInputValue: String
         get() = binding.textLocalUrl.text.toString()
     private val externalUrlInputValue: String
@@ -18,68 +21,135 @@ class ConfigurationActivity : Setup() {
         get() = binding.textAccessToken.text.toString()
     private val bypassHTTPSCheckBoxValue: Boolean
         get() = binding.checkBypassHTTPS.isChecked
+    private val modeSwitchValue: Boolean
+        get() = binding.switchUrlMode.isChecked
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val localUrl = store.localUrl
-        val externalUrl = store.externalUrl
-        val accessToken = store.accessToken
+        if(store.localUrl.isNotEmpty() && store.externalUrl.isNotEmpty() && store.accessToken.isNotEmpty()) {
+            if(store.localUrl == store.externalUrl) {
+                binding.textUrl.setText(store.localUrl)
+            } else {
+                binding.switchUrlMode.isChecked = true
+                onSwitchUrlMode()
+                binding.textLocalUrl.setText(store.localUrl)
+                binding.textExternalUrl.setText(store.externalUrl)
+            }
 
-        if(localUrl.isNotEmpty() && externalUrl.isNotEmpty() && accessToken.isNotEmpty()) {
-            binding.textLocalUrl.setText(localUrl)
-            binding.textExternalUrl.setText(externalUrl)
-            binding.textAccessToken.setText(accessToken)
+            binding.textAccessToken.setText(store.accessToken)
             binding.checkBypassHTTPS.isChecked = store.bypassHTTPS
         }
 
-        binding.buttonSave.setOnClickListener { saveButtonClick() }
-        binding.buttonReset.setOnClickListener { alert.showConfirm(resources.getString(R.string.alert_reset_app_settings), ::resetApplication) }
+        binding.buttonSave.setOnClickListener { onSaveButtonClick() }
+        binding.buttonReset.setOnClickListener { alert.showConfirm(resources.getString(R.string.alert_reset_app_settings), ::onResetApplication) }
+        binding.switchUrlMode.setOnClickListener { onSwitchUrlMode() }
     }
 
-    private fun saveButtonClick() {
+    private fun onSaveButtonClick() {
         if(accessTokenInputValue.isEmpty())
             toast.show(resources.getString(R.string.toast_missed_access_token))
-        else if(localUrlInputValue.isNotEmpty() && externalUrlInputValue.isNotEmpty()) {
-            if(!localUrlInputValue.startsWith("https://") || !localUrlInputValue.endsWith("/"))
+        else if(modeSwitchValue && localUrlInputValue.isNotEmpty() && externalUrlInputValue.isNotEmpty()) {
+            if (!localUrlInputValue.startsWith("https://") || !localUrlInputValue.endsWith("/"))
                 toast.show(resources.getString(R.string.toast_bad_local_url_format))
-            else if(!externalUrlInputValue.startsWith("https://") || !externalUrlInputValue.endsWith("/"))
+            else if (!externalUrlInputValue.startsWith("https://") || !externalUrlInputValue.endsWith(
+                    "/"
+                )
+            )
                 toast.show(resources.getString(R.string.toast_bad_external_url_format))
             else {
-                toast.show(resources.getString(R.string.toast_connecting),  Toast.LENGTH_SHORT)
-
-                thread {
-                    val localReachable =
-                        ServerState.reachable(localUrlInputValue, accessTokenInputValue, bypassHTTPSCheckBoxValue)
-                    val externalReachable =
-                        ServerState.reachable(externalUrlInputValue, accessTokenInputValue, bypassHTTPSCheckBoxValue)
-
-                    runOnUiThread {
-                        if(!localReachable && !externalReachable)  toast.show(resources.getString(R.string.toast_both_not_responding))
-                        else if (!localReachable) alert.showConfirm(resources.getString(R.string.toast_local_not_responding) + " " + resources.getString(
-                            R.string.alert_continue
-                        ), ::applyConfiguration)
-                        else if (!externalReachable) alert.showConfirm(resources.getString(R.string.toast_external_not_responding) + " " + resources.getString(
-                            R.string.alert_continue
-                        ), ::applyConfiguration)
-                        else  applyConfiguration()
-                    }
-                }
+                toast.show(resources.getString(R.string.toast_connecting), Toast.LENGTH_SHORT)
+                validateUrls()
             }
-        } else toast.show(resources.getString(R.string.toast_missed_local_url))
+        }else if(!modeSwitchValue && urlInputValue.isNotEmpty()) {
+                if(!urlInputValue.startsWith("https://") || !urlInputValue.endsWith("/"))
+                    toast.show(resources.getString(R.string.toast_bad_url_format))
+                else {
+                    toast.show(resources.getString(R.string.toast_connecting),  Toast.LENGTH_SHORT)
+                    validateUrl()
+                }
+        } else toast.show(resources.getString(if(modeSwitchValue) R.string.toast_missed_urls else R.string.toast_missed_url))
     }
 
-    private fun resetApplication() {
+    private fun validateUrls() {
+        thread {
+            val localReachable =
+                ServerState.reachable(
+                    localUrlInputValue,
+                    accessTokenInputValue,
+                    bypassHTTPSCheckBoxValue
+                )
+            val externalReachable =
+                ServerState.reachable(
+                    externalUrlInputValue,
+                    accessTokenInputValue,
+                    bypassHTTPSCheckBoxValue
+                )
+
+            runOnUiThread {
+                if (!localReachable && !externalReachable) toast.show(resources.getString(R.string.toast_both_not_responding))
+                else if (!localReachable) alert.showConfirm(
+                    resources.getString(R.string.toast_local_not_responding) + " " + resources.getString(
+                        R.string.alert_continue
+                    ), ::onApplyConfiguration
+                )
+                else if (!externalReachable) alert.showConfirm(
+                    resources.getString(R.string.toast_external_not_responding) + " " + resources.getString(
+                        R.string.alert_continue
+                    ), ::onApplyConfiguration
+                )
+                else onApplyConfiguration()
+            }
+        }
+    }
+
+    private fun validateUrl() {
+        thread {
+            val reachable =
+                ServerState.reachable(urlInputValue, accessTokenInputValue, bypassHTTPSCheckBoxValue)
+
+            runOnUiThread {
+                if(!reachable)
+                    toast.show(resources.getString(R.string.toast_not_responding))
+                else
+                    onApplyConfiguration()
+            }
+        }
+    }
+
+    private fun onResetApplication() {
         store.clear()
         SingletonStore.clear()
         runOnUiThread { ReloadApplication.reload(this) }
     }
 
-    private fun applyConfiguration() {
-        store.localUrl = localUrlInputValue
-        store.externalUrl = externalUrlInputValue
+    private fun onApplyConfiguration() {
+        if(modeSwitchValue) {
+            store.localUrl = localUrlInputValue
+            store.externalUrl = externalUrlInputValue
+        } else {
+            store.localUrl = urlInputValue
+            store.externalUrl = urlInputValue
+        }
         store.accessToken = accessTokenInputValue
         store.bypassHTTPS = bypassHTTPSCheckBoxValue
         finish()
+    }
+
+    private fun onSwitchUrlMode() {
+        if(modeSwitchValue){
+            binding.textUrl.visibility = View.GONE
+            binding.textLocalUrl.visibility = View.VISIBLE
+            binding.textExternalUrl.visibility = View.VISIBLE
+            binding.textExternalUrl.setText(urlInputValue)
+            binding.textUrl.setText("")
+        } else {
+            binding.textUrl.visibility = View.VISIBLE
+            binding.textUrl.setText(externalUrlInputValue)
+            binding.textLocalUrl.visibility = View.GONE
+            binding.textLocalUrl.setText("")
+            binding.textExternalUrl.visibility = View.GONE
+            binding.textExternalUrl.setText("")
+        }
     }
 }
