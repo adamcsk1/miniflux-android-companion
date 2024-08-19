@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.webkit.SslErrorHandler
+import android.webkit.WebResourceRequest
 import androidx.activity.result.ActivityResult
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.activities.configuration.ConfigurationActivity
@@ -79,6 +80,15 @@ class MainActivity : Setup() {
             binding.buttonSettings.visibility = View.GONE
 
         checkAvailability()
+    }
+
+    override fun handleOverrideUrlLoading(request: WebResourceRequest): Boolean {
+        val url = request.url.toString();
+        if(!url.contains(sharedPrefHelper.localUrl) && !url.contains(sharedPrefHelper.externalUrl))
+            startActivity(Intent(Intent.ACTION_VIEW, request.url))
+        else
+            binding.webView.loadUrl(url)
+        return true
     }
 
     private fun checkAvailability() {

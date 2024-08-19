@@ -32,6 +32,7 @@ open class Setup : FullscreenActivityBase() {
     protected open fun handleWebViewPageFinished(url: String) {}
     protected open fun handleWebViewError() {}
     protected open fun handleActivityResult(result: ActivityResult) {}
+    protected open fun handleOverrideUrlLoading(url: WebResourceRequest): Boolean {return true}
 
     private fun setupSwipe() {
         binding.webViewSwipeRefresh.isEnabled = true
@@ -50,6 +51,7 @@ open class Setup : FullscreenActivityBase() {
             override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) = handleWebViewPageReceivedSslError(handler)
             override fun onPageFinished(view: WebView, url: String) = handleWebViewPageFinished(url)
             override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) = handleWebViewError()
+            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean = handleOverrideUrlLoading(request)
         }
     }
 }
