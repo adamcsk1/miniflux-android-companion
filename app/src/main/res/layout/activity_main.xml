@@ -31,7 +31,7 @@
         android:gravity="center|center_horizontal"
         android:text="@string/back"
         android:textColor="@color/buttonText"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/webViewSwipeRefresh"
