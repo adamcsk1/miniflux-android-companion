@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/minifluxDarkBackground"
     tools:context=".activities.configuration.ConfigurationActivity">
 
     <LinearLayout
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:clipToOutline="true"
             android:ems="10"
             android:hint="@string/local_url"
@@ -32,7 +32,7 @@
             android:outlineProvider="bounds"
             android:singleLine="true"
             android:textColor="@color/colorAccent"
-            android:textColorHint="#9E9E9E"
+            android:textColorHint="@color/colorHint"
             android:visibility="visible" />
 
         <EditText
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:clipToOutline="true"
             android:ems="10"
             android:hint="@string/external_url"
@@ -50,7 +50,7 @@
             android:outlineProvider="bounds"
             android:singleLine="true"
             android:textColor="@color/colorAccent"
-            android:textColorHint="#9E9E9E"
+            android:textColorHint="@color/colorHint"
             android:visibility="visible" />
 
         <EditText
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:clipToOutline="true"
             android:ems="10"
             android:hint="@string/access_token"
@@ -68,7 +68,7 @@
             android:outlineProvider="bounds"
             android:singleLine="true"
             android:textColor="@color/colorAccent"
-            android:textColorHint="#9E9E9E"
+            android:textColorHint="@color/colorHint"
             android:visibility="visible" />
 
         <CheckBox
@@ -85,9 +85,9 @@
             android:id="@+id/buttonSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:text="@string/save_urls"
             android:textColor="@color/buttonText"
             android:visibility="visible" />
@@ -96,9 +96,9 @@
             android:id="@+id/buttonReset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:text="@string/reset_settings"
             android:textColor="@color/buttonText"
             android:visibility="visible" />
