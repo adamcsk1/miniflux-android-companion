@@ -16,6 +16,8 @@ class ConfigurationActivity : Setup() {
         get() = textExternalUrl.text.toString()
     private val accessTokenInputValue: String
         get() = textAccessToken.text.toString()
+    private val bypassHTTPSCheckBoxValue: Boolean
+        get() = checkBoxBypassHTTPS.isChecked
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,7 @@ class ConfigurationActivity : Setup() {
             textLocalUrl.setText(localUrl)
             textExternalUrl.setText(externalUrl)
             textAccessToken.setText(accessToken)
+            checkBoxBypassHTTPS.isChecked = sharedPrefHelper.bypassHTTPS
         }
 
         buttonSave.setOnClickListener { saveButtonClick() }
@@ -47,9 +50,9 @@ class ConfigurationActivity : Setup() {
 
                 thread {
                     val localReachable =
-                        ServerState.reachable(localUrlInputValue, accessTokenInputValue)
+                        ServerState.reachable(localUrlInputValue, accessTokenInputValue, bypassHTTPSCheckBoxValue)
                     val externalReachable =
-                        ServerState.reachable(externalUrlInputValue, accessTokenInputValue)
+                        ServerState.reachable(externalUrlInputValue, accessTokenInputValue, bypassHTTPSCheckBoxValue)
 
                     runOnUiThread {
                         if(!localReachable && !externalReachable)  toast.show(resources.getString(R.string.toast_both_not_responding))
@@ -75,6 +78,7 @@ class ConfigurationActivity : Setup() {
         sharedPrefHelper.localUrl = localUrlInputValue
         sharedPrefHelper.externalUrl = externalUrlInputValue
         sharedPrefHelper.accessToken = accessTokenInputValue
+        sharedPrefHelper.bypassHTTPS = bypassHTTPSCheckBoxValue
         finish()
     }
 }

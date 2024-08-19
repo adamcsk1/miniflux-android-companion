@@ -12,6 +12,7 @@
     <string name="toast_local_not_responding">The local Miniflux is not responding!</string>
     <string name="toast_external_not_responding">The external Miniflux is not responding!</string>
     <string name="toast_both_not_responding">Both Miniflux are not responding!</string>
+    <string name="toast_ssl_error">The SSL cert is invalid!</string>
     <string name="alert_reset_app_settings">Are you sure you want to reset the companion app configuration?</string>
     <string name="alert_continue">Do you want to continue?</string>
     <string name="app_name">Miniflux companion</string>
@@ -24,4 +25,5 @@
     <string name="reset_settings">Reset settings</string>
     <string name="settings">Companion app settings</string>
     <string name="confirm">Confirm</string>
+    <string name="bypass_https_errors">Bypass HTTPS errors</string>
 </resources>

@@ -3,6 +3,7 @@ package com.adamcsk1.miniflux_companion.activities.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.webkit.SslErrorHandler
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.activities.configuration.ConfigurationActivity
 import com.adamcsk1.miniflux_companion.api.ServerState
@@ -33,7 +34,7 @@ class MainActivity : Setup() {
     private fun loadMiniflux() {
         firstLoadFinished = false
         thread {
-            if (ServerState.reachable(sharedPrefHelper.localUrl, sharedPrefHelper.accessToken))
+            if (ServerState.reachable(sharedPrefHelper.localUrl, sharedPrefHelper.accessToken, sharedPrefHelper.bypassHTTPS))
                 runOnUiThread { webView.loadUrl(sharedPrefHelper.localUrl) }
             else
                 runOnUiThread {
@@ -50,6 +51,16 @@ class MainActivity : Setup() {
     }
 
     override fun handleWebViewError() = checkAvailability()
+
+    override fun handleWebViewPageReceivedSslError(handler: SslErrorHandler) {
+        if(sharedPrefHelper.bypassHTTPS)
+            handler.proceed()
+        else {
+            handler.cancel()
+            toast.show(resources.getString(R.string.toast_ssl_error))
+            showConfigurationActivity()
+        }
+    }
 
     override fun handleWebViewPageFinished(url: String) {
         webViewSwipeRefresh.isRefreshing = false
@@ -76,9 +87,9 @@ class MainActivity : Setup() {
     private fun checkAvailability() {
         thread {
             val localReachable =
-                ServerState.reachable(sharedPrefHelper.localUrl, sharedPrefHelper.accessToken)
+                ServerState.reachable(sharedPrefHelper.localUrl, sharedPrefHelper.accessToken, sharedPrefHelper.bypassHTTPS)
             val externalReachable =
-                ServerState.reachable(sharedPrefHelper.externalUrl, sharedPrefHelper.accessToken)
+                ServerState.reachable(sharedPrefHelper.externalUrl, sharedPrefHelper.accessToken, sharedPrefHelper.bypassHTTPS)
 
             runOnUiThread {
                 if(!localReachable && !externalReachable) {
