@@ -8,4 +8,5 @@
     <color name="buttonText">#BDBDBD</color>
     <color name="buttonBackground">#393530</color>
     <color name="minifluxDarkBackground">#222222</color>
+    <color name="buttonReset">#7C170F</color>
 </resources>
