@@ -28,5 +28,5 @@
     <string name="reset_settings">Reset settings</string>
     <string name="settings">Companion app settings</string>
     <string name="confirm">Confirm</string>
-    <string name="bypass_https_errors">Bypass HTTPS errors</string>
+    <string name="bypass_https_errors">Accept self-signed certificates for HTTPS</string>
 </resources>
