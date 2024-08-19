@@ -1,4 +1,4 @@
-package com.adamcsk1.miniflux_companion
+package com.adamcsk1.miniflux_companion.utils
 
 import android.content.Context
 import android.content.Intent

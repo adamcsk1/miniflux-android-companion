@@ -1,6 +1,6 @@
 package com.adamcsk1.miniflux_companion.api
 
-import com.adamcsk1.miniflux_companion.UnsafeSocket
+import com.adamcsk1.miniflux_companion.utils.UnsafeSocket
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HostnameVerifier

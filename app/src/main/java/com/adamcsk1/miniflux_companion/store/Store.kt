@@ -1,4 +1,4 @@
-package com.adamcsk1.miniflux_companion
+package com.adamcsk1.miniflux_companion.store
 
 import android.content.SharedPreferences
 import com.adamcsk1.miniflux_companion.models.StoreKeysModel
