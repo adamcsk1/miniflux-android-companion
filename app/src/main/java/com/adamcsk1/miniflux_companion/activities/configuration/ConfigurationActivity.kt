@@ -3,6 +3,8 @@ package com.adamcsk1.miniflux_companion.activities.configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.addCallback
+import androidx.core.app.NavUtils
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.store.SingletonStore
 import com.adamcsk1.miniflux_companion.utils.ReloadApplication
@@ -44,6 +46,8 @@ class ConfigurationActivity : Setup() {
         binding.buttonSave.setOnClickListener { onSaveButtonClick() }
         binding.buttonReset.setOnClickListener { alert.showConfirm(resources.getString(R.string.alert_reset_app_settings), ::onResetApplication) }
         binding.switchUrlMode.setOnClickListener { onSwitchUrlMode() }
+        val context = this
+        this.onBackPressedDispatcher.addCallback(this) { NavUtils.navigateUpFromSameTask(context); }
     }
 
     private fun onSaveButtonClick() {
