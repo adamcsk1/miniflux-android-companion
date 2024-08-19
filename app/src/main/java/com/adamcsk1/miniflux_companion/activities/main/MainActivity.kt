@@ -14,8 +14,6 @@ import kotlin.concurrent.thread
 
 
 class MainActivity : Setup() {
-    private var firstLoadFinished = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,7 +25,7 @@ class MainActivity : Setup() {
 
         if(SingletonStore.webViewState == null)
             if(store.localUrl.isNotEmpty() && store.externalUrl.isNotEmpty() && store.accessToken.isNotEmpty())
-                loadMiniflux()
+                checkAvailability()
             else
                 showConfigurationActivity()
         else
@@ -44,31 +42,13 @@ class MainActivity : Setup() {
         SingletonStore.webViewState = bundle
     }
 
-    override fun handleActivityResult(result: ActivityResult) = loadMiniflux()
+    override fun handleActivityResult(result: ActivityResult) = checkAvailability(true)
 
     private fun restoreInstanceStates() =
         SingletonStore.webViewState?.let {
             binding.webView.restoreState(it)
             apis.setBaseUrl(if (binding.webView.url!!.contains(store.localUrl)) store.localUrl else store.externalUrl)
         }
-
-
-    private fun loadMiniflux() {
-        firstLoadFinished = false
-        thread {
-            if (ServerState.reachable(store.localUrl, store.accessToken, store.bypassHTTPS))
-                runOnUiThread {
-                    apis.setBaseUrl(store.localUrl)
-                    binding.webView.loadUrl(store.localUrl)
-                }
-            else
-                runOnUiThread {
-                    toast.show(resources.getString(R.string.toast_switch_to_external))
-                    apis.setBaseUrl(store.externalUrl)
-                    binding.webView.loadUrl(store.externalUrl)
-                }
-        }
-    }
 
     private fun backButtonClick() {
         binding.webViewSwipeRefresh.isRefreshing = true
@@ -92,11 +72,8 @@ class MainActivity : Setup() {
         binding.webViewSwipeRefresh.isRefreshing = false
 
         if(url.contains(store.localUrl) || url.contains(store.externalUrl)) {
-            if (!firstLoadFinished) {
-                firstLoadFinished = true
-                binding.logoLayout.visibility = View.GONE
-                binding.webViewSwipeRefresh.visibility = View.VISIBLE
-            }
+            if (binding.webViewSwipeRefresh.visibility == View.GONE)
+                showWebView()
 
             if (url.contains("/entry/"))
                 binding.buttonBack.visibility = View.VISIBLE
@@ -121,7 +98,7 @@ class MainActivity : Setup() {
         return true
     }
 
-    private fun checkAvailability() {
+    private fun checkAvailability(fromActivity: Boolean = false) {
         thread {
             val localReachable =
                 ServerState.reachable(store.localUrl, store.accessToken, store.bypassHTTPS)
@@ -135,17 +112,23 @@ class MainActivity : Setup() {
                     binding.logoLayout.visibility = View.VISIBLE
                     SingletonStore.webViewState = null
                     showConfigurationActivity()
-                } else if(localReachable && !binding.webView.url!!.contains(store.localUrl)){
-                    toast.show(resources.getString(R.string.toast_switch_to_local))
+                } else if(localReachable && binding.webView.url?.contains(store.localUrl) != true){
+                    binding.webViewSwipeRefresh.isRefreshing = true
+                    toast.show(resources.getString(R.string.toast_local_access))
                     apis.setBaseUrl(store.localUrl)
                     binding.webView.loadUrl(store.localUrl)
                     SingletonStore.webViewState = null
-                } else if(!localReachable && !binding.webView.url!!.contains(store.externalUrl)) {
-                    toast.show(resources.getString(R.string.toast_switch_to_external))
+                } else if(!localReachable && binding.webView.url?.contains(store.externalUrl)  != true) {
+                    binding.webViewSwipeRefresh.isRefreshing = true
+                    toast.show(resources.getString(R.string.toast_external_access))
                     apis.setBaseUrl(store.externalUrl)
                     binding.webView.loadUrl(store.externalUrl)
                     SingletonStore.webViewState = null
-                } else checkMinifluxTheme()
+                } else {
+                    checkMinifluxTheme()
+                    if(fromActivity)
+                        showWebView()
+                }
             }
         }
     }
@@ -162,5 +145,10 @@ class MainActivity : Setup() {
             val meResponse = apis.me()
             runOnUiThread { theme.switch(meResponse?.theme) }
         }
+    }
+
+    private fun showWebView() {
+        binding.logoLayout.visibility = View.GONE
+        binding.webViewSwipeRefresh.visibility = View.VISIBLE
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_activity_configuration">Configurations</string>
-    <string name="toast_switch_to_external">Switching to the external Miniflux!</string>
-    <string name="toast_switch_to_local">Switching to the local Miniflux!</string>
+    <string name="toast_external_access">External access</string>
+    <string name="toast_local_access">Local access</string>
     <string name="toast_missed_access_token">Please enter your Miniflux access token!</string>
     <string name="toast_missed_local_url">Please enter the local and external Miniflux URLs!</string>
     <string name="toast_bad_local_url_format">Local url is not in correct format! Required format: https://{host}/</string>
