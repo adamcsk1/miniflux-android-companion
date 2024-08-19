@@ -3,6 +3,7 @@ package com.adamcsk1.miniflux_companion.activities.configuration
 import android.os.Bundle
 import android.widget.Toast
 import com.adamcsk1.miniflux_companion.R
+import com.adamcsk1.miniflux_companion.store.SingletonStore
 import com.adamcsk1.miniflux_companion.utils.ReloadApplication
 import com.adamcsk1.miniflux_companion.utils.ServerState
 import kotlin.concurrent.thread
@@ -70,6 +71,7 @@ class ConfigurationActivity : Setup() {
 
     private fun resetApplication() {
         store.clear()
+        SingletonStore.clear()
         runOnUiThread { ReloadApplication.reload(this) }
     }
 

@@ -6,9 +6,9 @@ import android.view.View
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
 import androidx.activity.result.ActivityResult
-import androidx.appcompat.app.AppCompatDelegate
 import com.adamcsk1.miniflux_companion.R
 import com.adamcsk1.miniflux_companion.activities.configuration.ConfigurationActivity
+import com.adamcsk1.miniflux_companion.store.SingletonStore
 import com.adamcsk1.miniflux_companion.utils.ServerState
 import kotlin.concurrent.thread
 
@@ -19,19 +19,39 @@ class MainActivity : Setup() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.buttonSettings.setOnClickListener { showConfigurationActivity() }
-        binding.buttonBack.setOnClickListener { backButtonClick() }
+        if (SingletonStore.webViewState != null)
+            binding.webView.restoreState(SingletonStore.webViewState!!)
 
         if(store.theme.isNotEmpty())
             theme.switch(store.theme)
 
-        if(store.localUrl.isNotEmpty() && store.externalUrl.isNotEmpty() && store.accessToken.isNotEmpty())
-            loadMiniflux()
+        if(SingletonStore.webViewState == null)
+            if(store.localUrl.isNotEmpty() && store.externalUrl.isNotEmpty() && store.accessToken.isNotEmpty())
+                loadMiniflux()
+            else
+                showConfigurationActivity()
         else
-            showConfigurationActivity()
+            restoreInstanceStates()
+
+        binding.buttonSettings.setOnClickListener { showConfigurationActivity() }
+        binding.buttonBack.setOnClickListener { backButtonClick() }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val bundle = Bundle()
+        binding.webView.saveState(bundle)
+        SingletonStore.webViewState = bundle
     }
 
     override fun handleActivityResult(result: ActivityResult) = loadMiniflux()
+
+    private fun restoreInstanceStates() =
+        SingletonStore.webViewState?.let {
+            binding.webView.restoreState(it)
+            apis.setBaseUrl(if (binding.webView.url!!.contains(store.localUrl)) store.localUrl else store.externalUrl)
+        }
+
 
     private fun loadMiniflux() {
         firstLoadFinished = false
@@ -117,15 +137,18 @@ class MainActivity : Setup() {
                     toast.show(resources.getString(R.string.toast_offline))
                     binding.webViewSwipeRefresh.visibility = View.GONE
                     binding.logoLayout.visibility = View.VISIBLE
+                    SingletonStore.webViewState = null
                     showConfigurationActivity()
                 } else if(localReachable && !binding.webView.url!!.contains(store.localUrl)){
                     toast.show(resources.getString(R.string.toast_switch_to_local))
                     apis.setBaseUrl(store.localUrl)
                     binding.webView.loadUrl(store.localUrl)
+                    SingletonStore.webViewState = null
                 } else if(!localReachable && !binding.webView.url!!.contains(store.externalUrl)) {
                     toast.show(resources.getString(R.string.toast_switch_to_external))
                     apis.setBaseUrl(store.externalUrl)
                     binding.webView.loadUrl(store.externalUrl)
+                    SingletonStore.webViewState = null
                 }
             }
         }
