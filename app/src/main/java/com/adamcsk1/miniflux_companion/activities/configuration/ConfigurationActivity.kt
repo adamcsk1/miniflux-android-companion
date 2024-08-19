@@ -17,7 +17,7 @@ class ConfigurationActivity : Setup() {
     private val accessTokenInputValue: String
         get() = textAccessToken.text.toString()
     private val bypassHTTPSCheckBoxValue: Boolean
-        get() = checkBoxBypassHTTPS.isChecked
+        get() = checkBypassHTTPS.isChecked
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +30,7 @@ class ConfigurationActivity : Setup() {
             textLocalUrl.setText(localUrl)
             textExternalUrl.setText(externalUrl)
             textAccessToken.setText(accessToken)
-            checkBoxBypassHTTPS.isChecked = sharedPrefHelper.bypassHTTPS
+            checkBypassHTTPS.isChecked = sharedPrefHelper.bypassHTTPS
         }
 
         buttonSave.setOnClickListener { saveButtonClick() }

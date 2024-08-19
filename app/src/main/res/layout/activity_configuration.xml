@@ -72,7 +72,7 @@
             android:visibility="visible" />
 
         <CheckBox
-            android:id="@+id/checkBoxBypassHTTPS"
+            android:id="@+id/checkBypassHTTPS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:buttonTint="@color/buttonText"
