@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#48433d</color>
-    <color name="colorPrimaryDark">#393530</color>
-    <color name="colorAccent">#b2aca2</color>
-    <color name="colorHint">#9E9E9E</color>
-    <color name="background">#323232</color>
-    <color name="buttonText">#BDBDBD</color>
-    <color name="minifluxDarkBackground">#222222</color>
+    <color name="colorPrimary">#4d90fe</color>
+    <color name="colorAccent">#333</color>
+    <color name="colorHint">#454545</color>
+    <color name="buttonText">#ffffff</color>
+    <color name="buttonBackground">#4d90fe</color>
+    <color name="minifluxDarkBackground">#ffffff</color>
 </resources>
